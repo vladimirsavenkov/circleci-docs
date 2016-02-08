@@ -8,3 +8,7 @@ deployment:
     branch: master
     commands:
       - aws s3 sync _site s3://circle-production-docs --delete
+  staging:
+    branch: *
+    commands:
+      - aws s3 sync _site s3://circle-production-docs/$CIRCLE_BRANCH --delete

@@ -6,13 +6,34 @@ var ReactDOM = require('react-dom');
 var SearchInput = React.createClass(
   {
     render: function () {
-      var hardCodedTags = ['getting-started', 'reference', 'nodejs', 'docker', 'browser-testing', 'troubleshooting', 'language-guides', 'mobile'],
-          tags = hardCodedTags.map(function (tag) {
-            var boundClickHandler = this.props.handleTagClick.bind(null, tag),
-                isActive = this.props.filters.tags.indexOf(tag) >= 0;
+      var tagCategories = [
+        {
+          name: 'Topics',
+          children: ['browser-testing', 'deployment', 'getting-started', 'parallelism', 'privacy-security', 'reference', 'troubleshooting']
+        },
+        {
+          name: 'Languages',
+          children: ['haskell', 'java', 'nodejs', 'php', 'python', 'scala', 'ruby']
+        },
+        {
+          name: 'Tools',
+          children: ['aws', 'docker', 'github', 'google-cloud-platform']
+        }
+      ],
+          categories = tagCategories.map(function (category) {
+            var tags = category.children.map(function (tag) {
+              var boundClickHandler = this.props.handleTagClick.bind(null, tag),
+                  isActive = this.props.filters.tags.indexOf(tag) >= 0;
+              return (
+                <span key={'toggle-' + tag}><a className={'tag ' + (isActive ? 'active' : '')} href="#" onClick={boundClickHandler}>{tag}</a> </span>
+              );
+            }, this);
             return (
-              <span key={'toggle-' + tag}><a className={'tag ' + (isActive ? 'active' : '')} href="#" onClick={boundClickHandler}>{tag}</a> </span>
-            )
+              <div className="col-sm-3">
+                <h4>{category.name}</h4>
+                <p>{tags}</p>
+              </div>
+            );
           }, this);
       return (
         <form className="doc-search form-horizontal">
@@ -25,10 +46,7 @@ var SearchInput = React.createClass(
           <div className="form-group">
             <label className="col-sm-2">Filter by tags:</label>
             <div className="col-sm-10">
-              <p>
-                {tags}
-                <b>more <i className="fa fa-caret-down"></i></b>
-              </p>
+              {categories}
             </div>
           </div>
         </form>
